@@ -1,55 +1,100 @@
 import React from "react";
-import Toggle from "./Toggle";
+import Toggle from "../../../Shared/Toggle";
 import { HiOutlineBellAlert } from "react-icons/hi2";
+import { MdBolt } from "react-icons/md";
 
-const PushNotificationOption = ({ active, onToggle }) => {
+const PushNotificationOption = ({
+  active,
+  onToggle,
+  isUrgent,
+  onUrgentToggle,
+  nextSlot,
+}) => {
   return (
-    <div
-  onClick={onToggle}
-  className={`group p-4 md:p-6 rounded-2xl transition-all duration-300 cursor-pointer border-2 select-none overflow-hidden ${
-    active
-      ? "border-orange-500 bg-orange-50 shadow-md shadow-orange-500/5"
-      : "border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50 shadow-sm"
-  }`}
->
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        {/* Left Side: Icon & Content */}
-        <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${
-            active ? "bg-orange-500 text-white" : "bg-blue-50 text-blue-600 group-hover:bg-blue-100"
-          }`}>
-            <HiOutlineBellAlert className="w-7 h-7" />
-          </div>
-          
-          <div className="flex-1">
-            <h4 className="text-lg md:text-xl font-black text-gray-900 leading-tight">
-              تنبيهات مباشرة (Push)
-            </h4>
-            <p className="text-xs md:text-sm text-gray-500 mt-0.5">
-              إرسال تنبيه فوري لآلاف المستخدمين المهتمين
-            </p>
-          </div>
+    <div className="bg-white rounded-2xl border border-gray-100 p-5 transition-all">
+      
+      {/* Top Row */}
+      <div className="flex items-center justify-between">
+        
+        {/* Right: Toggle */}
+        <Toggle checked={active} onChange={onToggle} />
+
+        {/* Center: Content */}
+        <div className="flex-1 px-4">
+          <h4 className="text-lg font-black text-gray-900">
+            تنبيهات مباشرة (Push)
+          </h4>
+          <p className="text-sm text-gray-500 mt-1">
+            إرسال تنبيه فوري لآلاف المهتمين في منطقتك
+          </p>
         </div>
 
-        {/* Right Side: Price & Toggle */}
-        <div className="flex items-center justify-between sm:justify-end gap-6 border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-100 flex-shrink-0">
-          <div className="flex flex-col sm:items-end">
-            <div className="flex items-baseline gap-1 text-gray-800">
-              <span className="font-sans text-2xl font-black">3</span>
-              <span className="text-xs font-bold text-gray-500">د.ك</span>
-            </div>
-            {active && (
-              <span className="text-[10px] text-orange-600 font-bold animate-pulse">
-                تم الاختيار
-              </span>
-            )}
-          </div>
-          
-         <div className="flex items-center justify-center w-12 h-6">
-  <Toggle on={active} />
-</div>
+        {/* Left: Icon */}
+        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+          <HiOutlineBellAlert className="text-gray-600 text-xl" />
         </div>
       </div>
+
+      {/* Price */}
+      <div className="flex items-center gap-2 mt-3">
+        <span className="text-xl font-black text-gray-900">3</span>
+        <span className="text-xs text-gray-500 font-bold">د.ك</span>
+      </div>
+
+      {/* Urgent Badge */}
+      <div className="flex items-center gap-2 mt-3">
+        <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded">
+          عاجل
+        </span>
+        <span className="text-xs text-gray-600">
+          تنبيه فوري الآن (+8 د.ك)
+        </span>
+      </div>
+
+      {/* Next Slot */}
+      {active && nextSlot && (
+        <div className="mt-3 text-xs text-gray-600 bg-gray-100 px-3 py-2 rounded-lg inline-flex items-center gap-2">
+          <span className="font-bold text-gray-700">الموعد القادم:</span>
+          <span>
+            {nextSlot.date} — {nextSlot.time}
+          </span>
+        </div>
+      )}
+
+      {/* Urgent Toggle */}
+      {active && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            onUrgentToggle();
+          }}
+          className={`mt-4 flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
+            isUrgent
+              ? "bg-red-50 border-red-300"
+              : "bg-gray-50 border-gray-200"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <MdBolt
+              className={`text-lg ${
+                isUrgent ? "text-red-600" : "text-gray-400"
+              }`}
+            />
+            <span
+              className={`text-sm font-bold ${
+                isUrgent ? "text-red-600" : "text-gray-700"
+              }`}
+            >
+              تنبيه عاجل
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-bold text-gray-800">8 د.ك</span>
+            <Toggle checked={isUrgent} onChange={onUrgentToggle} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

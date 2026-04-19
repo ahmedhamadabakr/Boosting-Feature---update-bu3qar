@@ -3,6 +3,14 @@ import { HiOutlineTicket, HiCheckCircle } from 'react-icons/hi';
 import { FiArrowLeft } from 'react-icons/fi';
 
 const CouponInput = ({ couponRef, onApply, applied, discount }) => {
+  const handleApply = () => {
+    const couponCode = couponRef?.current?.value?.trim();
+    
+    if (couponCode && couponCode.length === 6) {
+      onApply(couponCode);
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto">
   
@@ -21,7 +29,9 @@ const CouponInput = ({ couponRef, onApply, applied, discount }) => {
             disabled={applied}
             onChange={(e) => {
               e.target.value = e.target.value.toUpperCase();
-              if (e.target.value.length === 6) onApply();
+              if (e.target.value.length === 6) {
+                handleApply();
+              }
             }}
             className={`w-full p-3 pr-4 border rounded-xl text-sm font-medium transition-all duration-300 outline-none
               ${
@@ -36,7 +46,7 @@ const CouponInput = ({ couponRef, onApply, applied, discount }) => {
         </div>
 
         <button
-          onClick={onApply}
+          onClick={handleApply}
           disabled={applied}
           className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300
             ${

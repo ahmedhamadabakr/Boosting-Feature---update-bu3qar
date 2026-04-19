@@ -1,14 +1,14 @@
 import React from "react";
-import Toggle from "./Toggle";
+import Toggle from "../../../Shared/Toggle";
 import { RiWhatsappLine } from "react-icons/ri";
 
 
-const WhatsAppOption = ({ active, onToggle }) => {
+const WhatsAppOption = ({ active, onToggle = () => {}, nextSlot }) => {
   return (
     <div
       onClick={onToggle}
       className={`relative group p-4 md:p-5 rounded-2xl transition-all duration-200 cursor-pointer border-2 select-none active:scale-[0.98] ${
-        active
+        active  
           ? "border-orange-500 bg-orange-50/50"
           : "border-gray-100 bg-white hover:border-gray-200 shadow-sm"
       }`}
@@ -30,6 +30,12 @@ const WhatsAppOption = ({ active, onToggle }) => {
             <p className="text-xs text-gray-500 truncate">
               إرسال العقار لمجموعات المستثمرين والمهتمين
             </p>
+            {active && nextSlot && (
+              <div className="mt-2 text-xs text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg inline-flex items-center gap-2">
+                <span className="font-bold text-gray-700">الموعد القادم:</span>
+                <span>{nextSlot.date} — {nextSlot.time}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -38,9 +44,14 @@ const WhatsAppOption = ({ active, onToggle }) => {
             <span className="font-sans text-xl font-black text-gray-800">2</span>
             <span className="text-[10px] font-bold text-gray-500 mr-1">د.ك</span>
           </div>
+           {active && (
+              <span className="text-[10px] text-orange-600 font-bold animate-pulse">
+                تم الاختيار
+              </span>
+            )}
     
           <div className="pointer-events-none">
-            <Toggle on={active} />
+            <Toggle checked={active} onChange={onToggle} />
           </div>
         </div>
 
