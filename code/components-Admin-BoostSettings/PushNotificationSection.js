@@ -45,7 +45,20 @@ const PushNotificationSection = ({ settings, onChange }) => {
         onToggle={set("enabled")}
         activeColor="#ff5c00"
       />
-
+      <FieldInput
+        label="عنوان الباقة"
+        value={settings.title}
+        onChange={set("title")}
+      />
+      <div>
+        <label className="block text-xs font-bold text-neutral-500 mb-2">الوصف</label>
+        <textarea
+          value={settings.description}
+          onChange={(e) => set("description")(e.target.value)}
+          rows={3}
+          className="w-full border-b border-neutral-300 py-2 bg-transparent resize-none focus:outline-none focus:border-[#ff5c00]"
+        />
+      </div>
       <div className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="sm:col-span-2">

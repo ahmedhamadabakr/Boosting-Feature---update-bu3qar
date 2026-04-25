@@ -8,6 +8,7 @@ import { FiPhoneCall } from "react-icons/fi";
 const OrderSummary = ({
   summaryRows = [],
   couponApplied,
+  isExceeding,
   couponDiscount,
   discount,
   totalPrice,
@@ -28,10 +29,10 @@ const OrderSummary = ({
           <h3 className="text-xl font-black text-gray-800">ملخص الطلب</h3>
         </div>
 
-        {/* Rows logic */}
+        {/* قائمة الخدمات المختارة */}
         {!hasSelection ? (
           <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200 mb-6">
-            <p className="text-sm text-gray-400">لم تختر أي خدمة بعد</p>
+            <p className="text-sm text-gray-400 font-bold">لم تختر أي خدمة ترويجية بعد</p>
           </div>
         ) : (
           <ul className="space-y-4 mb-6">
@@ -50,7 +51,7 @@ const OrderSummary = ({
             <li className="flex justify-between items-center pt-4 border-t-2 border-gray-50">
               <span className="text-lg font-black">الإجمالي</span>
               <div className="text-left text-orange-600">
-                <span className="font-sans text-3xl font-black">{totalPrice}</span>
+                <span className="font-sans text-3xl font-black">{Number(totalPrice).toFixed(2)}</span>
                 <span className="font-bold text-sm mr-1">د.ك</span>
               </div>
             </li>
@@ -62,9 +63,9 @@ const OrderSummary = ({
         </div>
 
         <button
-          disabled={!hasSelection || isLoading}
+          disabled={!hasSelection || isLoading || isExceeding}
           onClick={onPay}
-          className="w-full bg-orange-500 text-white py-4 rounded-xl font-black text-lg hover:bg-orange-600 transition-all active:scale-[0.98] shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full py-4 rounded-xl font-black text-lg transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${isExceeding ? 'bg-gray-400 text-white shadow-none' : 'bg-orange-500 text-white hover:bg-orange-600 active:scale-[0.98] shadow-orange-500/25'}`}
         >
           {isLoading ? "جاري المعالجة..." : "تأكيد التمييز (الدفع الآن)"}
         </button>

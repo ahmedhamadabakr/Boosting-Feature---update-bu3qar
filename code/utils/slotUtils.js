@@ -73,13 +73,14 @@ export function getNextWhatsAppSlot(times, workingDays) {
   const dayNames = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   let currentDate = new Date(now);
 
-  // search for the first available working day
   for (let i = 0; i < 7; i++) {
     const currentDay = dayNames[currentDate.getDay()];
     
-    if (workingDays[currentDay]) {
-      // the day is available for work
-      const todaySlots = times
+    const daySettings = workingDays[currentDay];
+
+    // تحقق مما إذا كان اليوم مفعلاً ولديه عدد مرات إرسال متاحة (أكثر من 0)
+    if (daySettings?.enabled && daySettings.sendTimes > 0) {
+      const availableTimesForDay = times
         .map((t) => {
           const time24 = convertTo24Hour(t);
           const [h, m] = time24.split(":").map(Number);
@@ -88,22 +89,19 @@ export function getNextWhatsAppSlot(times, workingDays) {
           return date;
         })
         .sort((a, b) => a - b);
-
-      // search for the first available slot today
-      for (let slot of todaySlots) {
+      
+      // البحث عن أول موعد متاح في المستقبل لهذا اليوم
+      for (let slot of availableTimesForDay) {
         if (slot > now) {
-          return formatSlot(slot);
+          return {
+            ...formatSlot(slot),
+            dateObj: slot, 
+          };
         }
       }
-
-      // if all times for today have passed, use the first time tomorrow
-      const firstTime24 = convertTo24Hour(times[0]);
-      const [h, m] = firstTime24.split(":").map(Number);
-      currentDate.setHours(h, m, 0, 0);
-      return formatSlot(currentDate);
     }
 
-    // move to the next day
+    // إذا لم نجد موعداً في اليوم الحالي (إما لأنه غير مفعل أو مواعيده انتهت)، ننتقل لليوم التالي
     currentDate.setDate(currentDate.getDate() + 1);
     currentDate.setHours(0, 0, 0, 0);
   }

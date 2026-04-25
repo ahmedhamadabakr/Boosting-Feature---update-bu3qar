@@ -22,6 +22,7 @@ const FieldInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`w-full py-2 bg-transparent border-0 focus:ring-0 focus:outline-none ${inputClassName}`}
+        min={1}
       />
       {unit && <span className="text-neutral-400 text-sm whitespace-nowrap pr-1">{unit}</span>}
     </div>

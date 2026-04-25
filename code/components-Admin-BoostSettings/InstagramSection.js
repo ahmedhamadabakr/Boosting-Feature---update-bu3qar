@@ -2,6 +2,7 @@ import { MdSlowMotionVideo, MdImage, MdMovie } from "react-icons/md";
 import { FaInstagram } from "react-icons/fa";
 import SectionCard   from "./SectionCard";
 import SectionHeader from "./SectionHeader";
+import FieldInput from "./FieldInput";
 
 const INSTA_TYPES = [
   { key: "story", label: "قصة (Story)",   icon: MdSlowMotionVideo },
@@ -27,8 +28,20 @@ const InstagramSection = ({ settings, onChange }) => {
         enabled={settings.enabled}
         onToggle={set("enabled")}
       />
+      <FieldInput
+        label="عنوان الباقة"
+        value={settings.title}
+        onChange={set("title")}
+      />
+    <FieldInput
+        label="الوصف"
+        value={settings.description}
+        onChange={set("description")}
+        textarea
+   
+      />
 
-      <div className="space-y-3">
+      <div className="space-y-3  mt-4">
         {INSTA_TYPES.map(({ key, label, icon: Icon }) => (
           <div
             key={key}
@@ -46,6 +59,7 @@ const InstagramSection = ({ settings, onChange }) => {
                 <div className="flex items-center gap-2 mt-1">
                   <input
                     type="number"
+                    min={1}
                     value={settings[key].price}
                     onChange={(e) => setType(key, "price")(Number(e.target.value))}
                     className="w-14 text-xs bg-transparent border-b border-neutral-300 focus:ring-0 focus:outline-none focus:border-[#ff5c00] p-0"

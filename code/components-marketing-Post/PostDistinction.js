@@ -31,11 +31,15 @@ const PostDistinction = ({ post, user }) => {
 
   // Custom hooks
   const remainingDays = useRemainingDays(post);
+  const daysLimit = Math.floor(Number(remainingDays) || 0);
+  
   const { inAppDays, handleDayChange } = useInAppDays(remainingDays);
-  const { selectedOptions, handleInstagramOption, handleToggle } = useSelectedOptions();
+  const { selectedOptions, handleInstagramOption, handleToggle, handlePushToggle } = useSelectedOptions();
   const { couponCode, couponDiscount, couponApplied, applyCoupon } = useDistinctionCoupon(user?._id);
   const { basePrice, discount, totalPrice } = usePriceCalculation(selectedOptions, inAppDays, couponDiscount);
   const { summaryRows, hasSelection } = useOrderSummary(selectedOptions, inAppDays);
+  const isExceeding = Number(inAppDays) > daysLimit;
+  const reachedLimit = (Number(inAppDays) + 3) > daysLimit;
   const { nextPushSlot, nextWhatsAppSlot } = useSlotCalculation();
   const { submitPayment, isLoading } = usePaymentProcess(post, user, selectedOptions, inAppDays, totalPrice, tag, couponCode);
 
@@ -45,7 +49,8 @@ const PostDistinction = ({ post, user }) => {
       toast.error("قم بإختيار وصف لإعلانك");
       return;
     }
-    if (inAppDays > remainingDays) {
+    // ضمان المقارنة الرقمية عند الإرسال أيضاً
+    if (isExceeding) {
       toast.error("عدد الأيام المختارة أكثر من المتاح");
       return;
     }
@@ -87,15 +92,21 @@ const PostDistinction = ({ post, user }) => {
             {/* Boost Options */}
             <div className="grid grid-cols-1 gap-4">
               <div className="bg-white rounded-2xl p-1 shadow-sm border border-gray-100 overflow-hidden">
-                <InAppBoost inAppDays={inAppDays} onDayChange={handleDayChange} />
+                <InAppBoost 
+                  inAppDays={inAppDays} 
+                  onDayChange={handleDayChange} 
+                  remainingDays={remainingDays}
+                  postId={post?._id}
+                />
               </div>
 
               <PushNotificationOption
-                active={selectedOptions.pushNotification}
-                onToggle={() => handleToggle("pushNotification")}
+                active={selectedOptions.pushNotification || selectedOptions.urgentPush}
+                onToggle={() => handlePushToggle('normal')}
                 isUrgent={selectedOptions.urgentPush}
-                onUrgentToggle={() => handleToggle("urgentPush")}
+                onUrgentToggle={() => handlePushToggle('urgent')}
                 nextSlot={nextPushSlot}
+                
               />
 
               <InstagramOption
@@ -133,6 +144,7 @@ const PostDistinction = ({ post, user }) => {
               <OrderSummary
                 summaryRows={summaryRows}
                 couponApplied={couponApplied}
+                  isExceeding={isExceeding || reachedLimit}
                 couponDiscount={couponDiscount}
                 couponRef={couponRef}
                 discount={discount}
