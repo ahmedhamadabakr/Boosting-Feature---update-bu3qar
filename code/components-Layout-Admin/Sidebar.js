@@ -13,7 +13,7 @@ import {
 import { DiYeoman } from "react-icons/di";
 import { FaUserTie } from "react-icons/fa";
 import { RiDashboardFill, RiBuilding2Fill } from "react-icons/ri";
-import { BsRocketTakeoffFill } from "react-icons/bs";
+import { BsRocketTakeoffFill, BsLightningChargeFill } from "react-icons/bs";
 import { classNames } from "@/utils/classNames";
 export const Sidebar = ({ user, router, show, setShow, newCount }) => {
   return (
@@ -196,6 +196,26 @@ export const Sidebar = ({ user, router, show, setShow, newCount }) => {
             <BsRocketTakeoffFill size={18} />
             <span className="mx-4 font-medium tracking-wide">
               إعدادات الترويج
+            </span>
+          </a>
+        </Link>
+
+        <Link href="/admin/boost-orders">
+          <a
+            className={classNames(
+              "flex items-center px-4 py-2 mt-2",
+              router.pathname.indexOf("/admin/boost-orders") !== -1 &&
+              "bg-gray-50 text-orange-400"
+            )}
+          >
+            <BsLightningChargeFill size={18} />
+            <span className="mx-4 font-medium tracking-wide flex items-center gap-2">
+              طلبات البوست
+              {newCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">
+                  {newCount > 99 ? "99+" : newCount}
+                </span>
+              )}
             </span>
           </a>
         </Link>
